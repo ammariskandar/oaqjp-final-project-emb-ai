@@ -1,9 +1,7 @@
-"""
-This is the function using Watson NLP library.
-"""
-
 import requests
 import json
+
+# Task 2: Write Code "emotion_detector"
 
 def emotion_detector(text_to_analyse):
     url = 'https://sn-watson-emotion.labs.skills.network/v1/watson.runtime.nlp.v1/NlpService/EmotionPredict'
@@ -11,10 +9,10 @@ def emotion_detector(text_to_analyse):
     header = {"grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"}
     response = requests.post(url, json = myobj, headers=header)
     
-    # Step 1: Convert the response text into a dictionary
+    # Step 1: Convert the response into a dictionary
     formatted_response = json.loads(response.text)
 
-    # Step 2: Extract required set of emotions and their scores
+    # Step 2: Extract required set of emotions and their scorings
     if response.status_code == 200:        
         anger_score = formatted_response["emotionPredictions"][0]["emotion"]["anger"]
         disgust_score = formatted_response["emotionPredictions"][0]["emotion"]["disgust"]
@@ -22,7 +20,7 @@ def emotion_detector(text_to_analyse):
         joy_score = formatted_response["emotionPredictions"][0]["emotion"]["joy"]
         sadness_score = formatted_response["emotionPredictions"][0]["emotion"]["sadness"]
 
-    # Step 3: Find the dominant emotion
+    # Step 3: Find the most dominant emotion based on scorings
         emotion_list = [anger_score, disgust_score, fear_score, joy_score, sadness_score]
         dominant_emotion_index = emotion_list.index(max(emotion_list))
         emotion_keys = ["anger", "disgust", "fear", "joy", "sadness"]
@@ -36,7 +34,7 @@ def emotion_detector(text_to_analyse):
         sadness_score = None
         dominant_emotion_key = None
 
-    # Step 4: Modify the function to return the required output format
+    # Step 4 & Taks 3: Modify the function to return the required output format
     result = {
         'anger': anger_score,
         'disgust': disgust_score,

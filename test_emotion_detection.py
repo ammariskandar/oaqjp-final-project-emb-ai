@@ -1,38 +1,17 @@
-from flask import Flask, render_template, request
 from EmotionDetection.emotion_detection import emotion_detector
-from EmotionDetection.emotion_detection import emotion_predictor
+import unittest
 
-app = Flask("Emotion Detection")
+class TestEmotionDetector(unittest.TestCase):
+    def test_emotion_detector(self):
+        result_1 = emotion_detector('I am glad this happened')
+        self.assertEqual(result_1['dominant_emotion'], 'joy')
+        result_2 = emotion_detector('I am really mad about this')
+        self.assertEqual(result_2['dominant_emotion'], 'anger')
+        result_3 = emotion_detector('I feel disgusted just hearing about this')
+        self.assertEqual(result_3['dominant_emotion'], 'disgust')
+        result_4 = emotion_detector('I am so sad about this')
+        self.assertEqual(result_4['dominant_emotion'], 'sadness')
+        result_5 = emotion_detector('I am really afraid that this will happen')
+        self.assertEqual(result_5['dominant_emotion'], 'fear')
 
-def run_emotion_detection():
-    """
-    Main function to run the Emotion Detection application.
-    """
-    app.run(host="0.0.0.0", port=5000)
-
-@app.route("/emotionDetector")
-def sent_detector():
-    """
-    Analyze the user-provided text for emotions and return the result.
-    """
-    text_to_detect = request.args.get('textToAnalyze')
-    response = emotion_detector(text_to_detect)
-    formated_response = emotion_predictor(response)
-    if formated_response['dominant_emotion'] is None:
-        return "Invalid text! Please try again."
-    return (
-        f"For the given statement, the system response is 'anger': {formated_response['anger']} "
-        f"'disgust': {formated_response['disgust']}, 'fear': {formated_response['fear']}, "
-        f"'joy': {formated_response['joy']} and 'sadness': {formated_response['sadness']}. "
-        f"The dominant emotion is {formated_response['dominant_emotion']}."
-    )
-
-@app.route("/")
-def render_index_page():
-    ''' This function initiates the rendering of the main application
-        page over the Flask channel
-    '''
-    return render_template('index.html')
-
-if __name__ == "__main__":
-    run_emotion_detection()
+unittest.main()
